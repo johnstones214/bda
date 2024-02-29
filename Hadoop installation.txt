@@ -1,0 +1,96 @@
+Experiment no 1 : Install Hadoop on Ubuntu 20.04 – Step by Step
+
+
+Step 1: Start terminal on your ubuntu system and run below commands one by one
+
+sudo apt update && sudo apt upgrade -y
+
+
+sudo apt install openssh-server openssh-client -y
+
+
+sudo apt install openjdk-11-jdk -y
+
+
+
+Step 2 : Create Non-Root User For Hadoop
+
+sudo adduser hadoop
+
+su – hadoop
+
+Step 2: Set Up SSH Keys
+Now in order to install Hadoop on Ubuntu we will use the Hadoop user you just created and use it to make an SSH connection with it. Use this command to generate an SSH key pair and save it:
+
+ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
+
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+Now use this command to make sure that your SSH connection has all the required permissions:
+
+chmod 600 ~/.ssh/authorized_keys
+
+chmod 700 ~/.ssh
+
+ssh localhost
+
+
+
+Step 3: Download and Install Hadoop on Ubuntu
+You can visit the Apache Hadoop website to see a list of versions with their recent change log. Select the version of your liking and you will be presented with a link that can be used with the following command to download and install Hadoop on Ubuntu. Here I am choosing version 3.3.6. Replace ‘3.3.6’ with the latest stable version if necessary:
+wget https://downloads.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz
+Once the download is over, use this line to finish the extraction and installation process:
+
+tar xzf hadoop-3.3.6.tar.gz
+sudo mv hadoop-3.3.6 /usr/local/hadoop
+sudo chown -R hdoop:hdoop /usr/local/hadoop
+
+Step 4: Configure Hadoop Environment
+Set JAVA_HOME in /usr/local/hadoop/etc/hadoop/hadoop-env.sh:
+
+echo 'export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")' | sudo tee -a /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+
+
+Step 5: Edit Configuration Files
+Update Hadoop’s XML configuration files with your cluster settings.
+
+nano /usr/local/hadoop/etc/hadoop/core-site.xml
+
+Step 6: Format HDFS
+Initialize the Hadoop filesystem namespace.
+
+/usr/local/hadoop/bin/hdfs namenode -format
+Step 7: Start Hadoop Services
+Launch HDFS and YARN services.
+
+/usr/local/hadoop/sbin/start-dfs.sh
+
+
+/usr/local/hadoop/sbin/start-yarn.sh
+
+
+
+Step 8: Verify Installation
+Check the running Java processes to confirm Hadoop is running.
+
+Jps
+Step 9: Access Web Interfaces
+Open web browsers to Hadoop’s NameNode and ResourceManager interfaces.
+NameNode: http://localhost:9870
+ResourceManager: http://localhost:8088
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
